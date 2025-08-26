@@ -110,13 +110,45 @@ class RelationModel(CoreModel):
         ordering = ("-create_datetime",)
 
 
+class FreezerModel(CoreModel):
+    """
+    冰柜表
+    """
+    dfcEx1 = models.CharField(max_length=10, verbose_name="柜号")
+    dfcEx2_choice = (
+    (1,"冰柜"),
+    (2,"冰棺")
+    )
+    dfcEx2 = models.SmallIntegerField(choices=dfcEx2_choice, default=1, verbose_name="冰柜类型")
+    # 状态 ： 正常  维修中  损坏
+    dfcEx3 = models.CharField(max_length=10, default="正常",verbose_name="状态", blank=True, null=True)
+    dfcEx4 = models.CharField(max_length=20,verbose_name="添加日期", blank=True, null=True)
+    dfcEx5 = models.CharField(max_length=10,verbose_name="添加账号",blank=True,null=True)
+    dfcEx6_choice = (
+    (1,"空闲"),
+    (2,"使用中")
+    )
+    dfcEx6 = models.SmallIntegerField(choices = dfcEx6_choice,default=1,verbose_name="使用状态", blank=True, null=True)
+    dfcStatus_choice = (
+    (1,"未删除"),
+    (2,"已删除")
+    )
+    dfcStatus = models.SmallIntegerField(choices=dfcStatus_choice,default=1,verbose_name="删除状态", blank=True, null=True)
+
+    class Meta:
+        db_table = table_prefix + "freezer"
+        verbose_name = "冰柜表"
+        verbose_name_plural = verbose_name
+        ordering = ("-create_datetime",)
+
+
+
 class RefrigeratedModel(CoreModel):
     """
     冷藏遗体表
     """
     diEx = models.ForeignKey(Departed, on_delete=models.CASCADE, verbose_name="关联的逝者信息", related_name="refrigerated",blank=True, null=True)
-    lcEx1 = models.CharField(max_length=10, verbose_name="柜号", blank=True, null=True)
-    lcEx2 = models.CharField(max_length=10, verbose_name="冰柜类型", blank=True, null=True)
+    lcg = models.ForeignKey(FreezerModel,on_delete=models.CASCADE,verbose_name="关联冷藏柜",related_name="refrigerated",blank=True,null=True)
     lcEx3 = models.CharField(max_length=10, verbose_name="", blank=True, null=True)
     lcEx4 = models.CharField(max_length=10, verbose_name="", blank=True, null=True)
     lcEx5 = models.CharField(max_length=10, verbose_name="", blank=True, null=True)
@@ -154,18 +186,44 @@ class RefrigeratedModel(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ("-create_datetime",)
 
+class crematorModel(CoreModel):
+    """
+    火化炉信息表
+    """
+    #平板炉  捡灰炉
+    hhl1 = models.CharField(max_length=10, verbose_name="炉型", blank=True, null=True)
+    hhl2 = models.CharField(max_length=10, verbose_name="炉号", blank=True, null=True)
+    hhl3 = models.CharField(max_length=15, verbose_name="生产厂家", blank=True, null=True)
+    hhl4 = models.CharField(max_length=15, verbose_name="购炉日期", blank=True, null=True)
+    hhl5 = models.CharField(max_length=15, verbose_name="大修变更日期", blank=True, null=True)
+    hhl6 = models.CharField(max_length=15, verbose_name="登记日期", blank=True, null=True)
+    # 状态 ： 正常  维修中  损坏
+    hhl7 = models.CharField(max_length=5, verbose_name="状态",default="正常",blank=True, null=True)
+    hhl8 = models.CharField(max_length=15, verbose_name="备注", blank=True, null=True)
+    hhl9_choices = (
+    (1,"空闲"),
+    (2,"使用中")
+    )
+    hhl9 = models.SmallIntegerField(choices=hhl9_choices,verbose_name="使用状态",default=1,blank=True, null=True)
+
+    class Meta:
+        db_table = table_prefix + "cremator"
+        verbose_name = "火化炉信息表"
+        verbose_name_plural = verbose_name
+        ordering = ("-create_datetime",)
 
 class CremationModel(CoreModel):
     """
     火化表
     """
     diEx = models.ForeignKey(Departed, on_delete=models.CASCADE, verbose_name="关联的逝者信息", related_name="cremation",blank=True, null=True)
-    dfiEx1_choices = (
-    (1,"平板炉"),
-    (2,"捡灰炉"),
-    )
-    dfiEx1 = models.SmallIntegerField(verbose_name="炉型",choices=dfiEx1_choices,default=1, blank=True, null=True)
-    dfiEx2 = models.CharField(max_length=10, verbose_name="炉号", blank=True, null=True)
+    hhlId = models.ForeignKey(crematorModel, on_delete=models.CASCADE, verbose_name="关联火化炉信息", related_name="cremation",blank=True, null=True)
+    # dfiEx1_choices = (
+    # (1,"平板炉"),
+    # (2,"捡灰炉"),
+    # )
+    # dfiEx1 = models.SmallIntegerField(verbose_name="炉型",choices=dfiEx1_choices,default=1, blank=True, null=True)
+    # dfiEx2 = models.CharField(max_length=10, verbose_name="炉号", blank=True, null=True)
     dfiEx3_choices = (
     (1,"等待火化"),
     (2,"正在火化"),
@@ -269,4 +327,6 @@ class ParentsClassModel(CoreModel):
         verbose_name = "子类项目"
         verbose_name_plural = verbose_name
         ordering = ("-create_datetime",)
+
+
 

@@ -7,7 +7,7 @@ const setWatermark = (str: string) => {
 	can.height = 130;
 	const cans = <CanvasRenderingContext2D>can.getContext('2d');
 	cans.rotate((-20 * Math.PI) / 180);
-	cans.font = '12px Vedana';
+	cans.font = '28px Vedana';
 	cans.fillStyle = 'rgba(200, 200, 200, 0.30)';
 	cans.textBaseline = 'middle';
 	cans.fillText(str, can.width / 10, can.height / 2);

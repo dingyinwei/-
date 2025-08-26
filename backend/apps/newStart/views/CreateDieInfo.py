@@ -65,7 +65,6 @@ class CreateDieInfoSerializer(CustomModelSerializer):
                 '''
                 删除QuerySet对象：delete()
                 取QuerySet对象值： a.b
-                
                 删除Object对象 ： remove()
                 取Object对象值： a.b
                 
@@ -131,7 +130,6 @@ class CreateDieInfoSerializer(CustomModelSerializer):
                 else:
                     # 不存在关联则创建
                     RelationModel.objects.create(departed=instance, **dieRelation)
-
             # 刷新实例并返回
             instance.refresh_from_db()
 
